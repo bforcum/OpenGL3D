@@ -19,17 +19,15 @@ add_executable (OpenGL3D
 	src/main.cpp
 	src/config.h
 	src/glad.c
+	src/triangle_mesh.h
+	src/triangle_mesh.cpp
 )
 
 target_include_directories(OpenGL3D PRIVATE include)
 
 target_link_libraries(OpenGL3D "${PROJECT_SOURCE_DIR}/lib/glfw3.lib" OpenGL::GL)
 
-if (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src/shader")
-    add_custom_command(TARGET OpenGL3D POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "shader")
-    add_custom_command(TARGET OpenGL3D POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${PROJECT_SOURCE_DIR}/src/shader"
-            $<TARGET_FILE_DIR:OpenGL3D>/shader)
-endif()
+add_custom_command(TARGET OpenGL3D POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+        "${PROJECT_SOURCE_DIR}/src/shader"
+        $<TARGET_FILE_DIR:OpenGL3D>/shader)
