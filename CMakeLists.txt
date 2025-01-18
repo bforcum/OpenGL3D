@@ -13,21 +13,40 @@ project ("OpenGL3D")
 
 find_package(OpenGL REQUIRED)
 
+add_subdirectory(dependencies/glfw EXCLUDE_FROM_ALL)
+
 # Include sub-projects.
 
-add_executable (OpenGL3D
+add_executable (${PROJECT_NAME}
 	src/main.cpp
 	src/config.h
+  src/config.cpp
 	src/glad.c
-	src/triangle_mesh.h
 	src/triangle_mesh.cpp
+  src/stb_image.h
+  src/Material.cpp
 )
 
-target_include_directories(OpenGL3D PRIVATE include)
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
-target_link_libraries(OpenGL3D "${PROJECT_SOURCE_DIR}/lib/glfw3.lib" OpenGL::GL)
+target_include_directories(${PROJECT_NAME} PUBLIC dependencies/glfw/include)
 
-add_custom_command(TARGET OpenGL3D POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+target_link_directories(${PROJECT_NAME} PRIVATE dependencies/glfw/src)
+
+target_link_libraries(${PROJECT_NAME} glfw OpenGL::GL)
+
+add_custom_command(
+  TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/src/shader"
-        $<TARGET_FILE_DIR:OpenGL3D>/shader)
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader
+)
+
+if (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/asset")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "asset")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${PROJECT_SOURCE_DIR}/asset"
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>/asset)
+endif()
