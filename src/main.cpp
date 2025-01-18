@@ -3,6 +3,8 @@
 
 #include "config.h"
 #include "triangle_mesh.h"
+#include "Material.h"
+#
 
 using namespace std;
 
@@ -27,37 +29,51 @@ int main() {
 	window = glfwCreateWindow(1280, 720, "3D Program", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
-	glfwMakeContextCurrent(window);
-
 	if (!gladLoadGLLoader( (GLADloadproc) glfwGetProcAddress)) {
 		glfwTerminate();
 		return -1;
 	}
 
-	glClearColor(0.25, 0.75, 0.5, 1.0);
+	glClearColor(0.25f, 0.75f, 0.5f, 1.0f);
 
 	int w,h;
 	glfwGetFramebufferSize(window, &w, &h);
 	glViewport(0,0,w,h);
 
 	TriangleMesh* triangle = new TriangleMesh();
+	Material* material = new Material("asset/face.png");
+	Material* mask = new Material("asset/circle-pixel-mask.png");
 
 	unsigned int shader = make_shader(
 		"shader/vertex.txt",
 		"shader/fragment.txt"
 	);
 
+	// Set texture units
+	glUseProgram(shader);
+	glUniform1i(glGetUniformLocation(shader, "material"), 0);
+	glUniform1i(glGetUniformLocation(shader, "mask"), 1);
+
+	// Mask blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader);
+		material->use(0);
+		mask->use(1);
 		triangle->draw();
 
 		glfwSwapBuffers(window);
 	}
 
 	glDeleteProgram(shader);
+	delete triangle;
+	delete material;
+	delete mask;
 	glfwTerminate();
 
 	return 0;

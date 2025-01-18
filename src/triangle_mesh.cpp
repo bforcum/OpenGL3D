@@ -3,15 +3,16 @@
 TriangleMesh::TriangleMesh() {
 
     std::vector<float> positions = {
-        -0.5f, -0.5f, 0.0f, //bottom left
-         0.5f, -0.5f, 0.0f, //bottom right
-        0.0f,  0.5f, 0.0f, //top
+        -1.0f, -1.0f, 0.0f, // bottom left
+         1.0f, -1.0f, 0.0f, // bottom right
+        -1.0f,  1.0f, 0.0f, // top left
+         1.0f,  1.0f, 0.0f  // top right
     };
     std::vector<int> colorIndices = {
         0, 1, 2
     };
     std::vector<int> elements = {
-        0, 1, 2
+        0, 1, 2, 1, 2, 3
     };
     element_count = 6;
 
