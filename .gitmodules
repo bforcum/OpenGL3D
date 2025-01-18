@@ -1,3 +1,4 @@
 [submodule "glfw"]
 	path = dependencies/glfw
 	url = https://github.com/glfw/glfw.git
+	tag = 3.4
