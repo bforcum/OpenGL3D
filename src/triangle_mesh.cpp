@@ -1,4 +1,4 @@
-#include "triangle_mesh.h"
+#include "triangle_mesh.hpp"
 
 TriangleMesh::TriangleMesh() {
 

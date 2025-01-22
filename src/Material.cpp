@@ -1,5 +1,5 @@
-#include "Material.h"
-#include "stb_image.h"
+#include "Material.hpp"
+#include <stb/stb_image.h>
 
 Material::Material(const char* filename) {
     int width, height, channels;

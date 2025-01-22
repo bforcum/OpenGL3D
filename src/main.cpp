@@ -1,9 +1,9 @@
 ﻿// OpenGL3D.cpp : Defines the entry point for the application.
 //
 
-#include "config.h"
-#include "triangle_mesh.h"
-#include "Material.h"
+#include "config.hpp"
+#include "triangle_mesh.hpp"
+#include "Material.hpp"
 #
 
 using namespace std;
