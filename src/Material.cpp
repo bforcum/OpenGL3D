@@ -1,13 +1,9 @@
 #include "Material.h"
-
 #include "stb_image.h"
-
 
 Material::Material(const char* filename) {
     int width, height, channels;
     unsigned char* data = stbi_load(filename, &width, &height, &channels, STBI_rgb_alpha);
-    
-    std::cout << width << "\n";
     
     // Create texture
     glGenTextures(1, &texture);
@@ -21,11 +17,11 @@ Material::Material(const char* filename) {
     // Free data
     stbi_image_free(data);
 
-    // Configure sammpler
+    // Configure sampler
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T , GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER , GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER , GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 Material::~Material() {
@@ -33,6 +29,6 @@ Material::~Material() {
 }
 
 void Material::use(int unit) {
-    glActiveTexture(GL_TEXTURE + unit);
+    glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, texture);
 }

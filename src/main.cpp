@@ -41,8 +41,8 @@ int main() {
 	glViewport(0,0,w,h);
 
 	TriangleMesh* triangle = new TriangleMesh();
-	Material* material = new Material("asset/face.png");
-	Material* mask = new Material("asset/circle-pixel-mask.png");
+	Material* material = new Material("assets/face.png");
+	Material* mask = new Material("assets/circle-pixel-mask2.png");
 
 	unsigned int shader = make_shader(
 		"shader/vertex.txt",
