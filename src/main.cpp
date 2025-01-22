@@ -27,6 +27,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
 	window = glfwCreateWindow(1280, 720, "3D Program", NULL, NULL);
+	glfwMaximizeWindow(window);
 	glfwMakeContextCurrent(window);
 
 	if (!gladLoadGLLoader( (GLADloadproc) glfwGetProcAddress)) {
@@ -42,7 +43,7 @@ int main() {
 
 	TriangleMesh* triangle = new TriangleMesh();
 	Material* material = new Material("assets/face.png");
-	Material* mask = new Material("assets/circle-pixel-mask2.png");
+	Material* mask = new Material("assets/circle-pixel-mask.png");
 
 	unsigned int shader = make_shader(
 		"shader/vertex.txt",

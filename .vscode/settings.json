@@ -4,7 +4,8 @@
         "sstream": "cpp",
         "vector": "cpp",
         "xstring": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "xiosbase": "cpp"
     },
     "cmake.debugConfig": {
         "console": "integratedTerminal"
