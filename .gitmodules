@@ -2,3 +2,7 @@
 	path = dependencies/glfw
 	url = https://github.com/glfw/glfw.git
 	tag = 3.4
+[submodule "dependencies/glm"]
+	path = dependencies/glm
+	url = https://github.com/g-truc/glm.git
+	tag = 1.0.1
