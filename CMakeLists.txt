@@ -37,19 +37,22 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory(dependencies/glfw EXCLUDE_FROM_ALL)
 
+
 add_executable (${PROJECT_NAME}
     src/main.cpp
-    src/config.h
+    src/config.hpp
     src/config.cpp
-    src/glad.c
     src/triangle_mesh.cpp
-    src/stb_image.h
     src/Material.cpp
 )
+
+# Link glad
+target_sources(${PROJECT_NAME} PRIVATE "dependencies/glad/glad.c")
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/dependencies
     ${PROJECT_SOURCE_DIR}/dependencies/glfw/include
+    ${PROJECT_SOURCE_DIR}/dependencies/glm
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/dependencies/glfw)
@@ -59,6 +62,7 @@ target_link_libraries(${PROJECT_NAME} glfw OpenGL::GL)
 # Copy shaders to build directory
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory shader
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${PROJECT_SOURCE_DIR}/src/shader
         $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader
@@ -67,8 +71,7 @@ add_custom_command(
 # Copy assets to build directory
 if (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/assets")
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "assets")
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "assets"
         COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${PROJECT_SOURCE_DIR}/assets"
             $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets)

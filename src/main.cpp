@@ -4,7 +4,6 @@
 #include "config.hpp"
 #include "triangle_mesh.hpp"
 #include "Material.hpp"
-#
 
 using namespace std;
 
@@ -27,7 +26,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
 	window = glfwCreateWindow(1280, 720, "3D Program", NULL, NULL);
-	glfwMaximizeWindow(window);
+	// glfwMaximizeWindow(window);
 	glfwMakeContextCurrent(window);
 
 	if (!gladLoadGLLoader( (GLADloadproc) glfwGetProcAddress)) {
@@ -46,14 +45,32 @@ int main() {
 	Material* mask = new Material("assets/circle-pixel-mask.png");
 
 	unsigned int shader = make_shader(
-		"shader/vertex.txt",
-		"shader/fragment.txt"
+		"shader/vertex.glsl",
+		"shader/fragment.glsl"
 	);
 
+	
 	// Set texture units
 	glUseProgram(shader);
 	glUniform1i(glGetUniformLocation(shader, "material"), 0);
 	glUniform1i(glGetUniformLocation(shader, "mask"), 1);
+	
+	glm::vec3 quad_position = {0.1f, -0.2f, 0.0f};
+	glm::vec3 camera_pos = {-5.0f, 0.0f, 3.0f};
+	glm::vec3 camera_target = {0.0f, 0.0f, 0.0f};
+	glm::vec3 up = {0.0f, 0.0f, 1.0f};
+
+	unsigned int model_location = glGetUniformLocation(shader, "model");
+	unsigned int view_location = glGetUniformLocation(shader, "view");
+	unsigned int projection_location = glGetUniformLocation(shader, "projection");
+
+	glm::mat4 view = glm::lookAt(camera_pos, camera_target, up);
+	glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
+
+	glm::mat4 projection = glm::perspective(
+		45.0f, 1280.0f / 720.0f, 0.1f, 10.0f
+	);
+	glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
 
 	// Mask blending
 	glEnable(GL_BLEND);
@@ -61,9 +78,15 @@ int main() {
 	
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, quad_position);
+		model = glm::rotate(model, (float) glfwGetTime(), {0.0f, 0.0f, 1.0f});
+		glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
 		
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader);
+		
 		material->use(0);
 		mask->use(1);
 		triangle->draw();
